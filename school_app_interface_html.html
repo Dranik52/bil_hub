@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bilim Innovation Lyceum | Mobile App</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        navy: {
+                            900: '#0F172A',
+                            800: '#1E293B',
+                            700: '#1E3A8A',
+                            600: '#2563EB',
+                            500: '#3B82F6',
+                        },
+                        surface: {
+                            light: '#F8FAFC',
+                            card: '#FFFFFF',
+                            border: '#E2E8F0',
+                            subtle: '#F1F5F9'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* Custom scrollbar hiding for clean native mobile feel */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        
+        .tab-content {
+            transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
+        }
+
+        @keyframes pulse-ring {
+            0% { transform: scale(0.95); opacity: 0.8; }
+            50% { transform: scale(1.05); opacity: 0.4; }
+            100% { transform: scale(0.95); opacity: 0.8; }
+        }
+        .pulse-badge {
+            animation: pulse-ring 2s infinite;
+        }
+    </style>
+</head>
+<body class="bg-slate-900 text-slate-800 font-sans antialiased min-h-screen flex items-center justify-center p-0 sm:p-4">
+
+    <!-- Mobile Frame Container -->
+    <div class="w-full sm:max-w-md h-[100vh] sm:h-[880px] bg-surface-light sm:rounded-[40px] shadow-2xl flex flex-col overflow-hidden relative border-0 sm:border-[8px] border-slate-800">
+        
+        <!-- TOP APP BAR / HEADER -->
+        <header class="bg-navy-900 text-white pt-5 pb-4 px-5 shadow-lg relative z-10 flex-shrink-0">
+            <div class="flex items-center justify-between mb-3">
+                <div class="flex items-center space-x-3">
+                    <!-- BIL School Emblem Logo -->
+                    <div class="w-11 h-11 rounded-full bg-slate-800 p-0.5 shadow-md flex items-center justify-center flex-shrink-0 border border-blue-400/40 overflow-hidden">
+                        <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEASABIAAD/2wBDAP//////////////////////////////////////////////////////////////////////////////////////wgALCAAYABgBAREA/8QAFBABAAAAAAAAAAAAAAAAAAAAAP/aAAgBAQABPxA=" 
+                             alt="BIL Emblem" 
+                             class="w-full h-full object-cover rounded-full"
+                             onerror="this.onerror=null; this.parentNode.innerHTML='<div class=\'w-full h-full bg-blue-600 rounded-full flex items-center justify-center font-bold text-white text-xs\'>BIL</div>';">
+                    </div>
+                    <div>
+                        <h1 class="text-[11px] font-bold tracking-wider text-blue-400 uppercase">Aktau BIL</h1>
+                        <h2 class="text-xs font-bold leading-tight text-white">Bilim Innovation Lyceum</h2>
+                    </div>
+                </div>
+
+                <!-- Student Profile Mini Avatar & Notifications -->
+                <div class="flex items-center space-x-2">
+                    <button onclick="showToast('2 new messages from School Parliament')" class="relative p-2 text-slate-300 hover:text-white rounded-full hover:bg-navy-800 transition">
+                        <i data-lucide="bell" class="w-5 h-5"></i>
+                        <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-blue-500 rounded-full"></span>
+                    </button>
+                    <div class="w-9 h-9 rounded-full bg-slate-700 border-2 border-blue-500/50 overflow-hidden flex items-center justify-center text-xs font-bold text-white bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=200');">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Student Brief Info / Quick Stats Bar -->
+            <div class="bg-navy-800/80 backdrop-blur border border-slate-700/60 rounded-2xl p-2.5 flex items-center justify-between text-xs">
+                <div class="flex items-center space-x-2 px-2">
+                    <div class="w-2 h-2 rounded-full bg-emerald-400 pulse-badge"></div>
+                    <span class="text-slate-300 font-medium">Aidyn <span class="text-slate-400">(Grade 10B)</span></span>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <div class="bg-blue-900/60 text-blue-300 px-2.5 py-1 rounded-xl font-semibold border border-blue-500/30 flex items-center gap-1">
+                        <i data-lucide="award" class="w-3.5 h-3.5 text-blue-400"></i>
+                        <span id="header-points-display">150 XP</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- MAIN SCROLLABLE CONTENT AREA -->
+        <main class="flex-1 overflow-y-auto no-scrollbar p-4 space-y-4 pb-24">
+
+            <!-- TAB 1: HOME -->
+            <section id="tab-home" class="tab-content space-y-4">
+                <!-- Welcome Banner -->
+                <div class="bg-gradient-to-r from-navy-800 to-navy-700 rounded-2xl p-4 text-white shadow-sm relative overflow-hidden">
+                    <div class="absolute -right-4 -bottom-4 w-28 h-28 bg-blue-500/10 rounded-full blur-xl"></div>
+                    <div class="relative z-10">
+                        <span class="text-[10px] uppercase font-bold tracking-wider bg-blue-500/20 text-blue-300 px-2 py-0.5 rounded-full">Today at Campus</span>
+                        <h3 class="text-lg font-bold mt-1">Hello, Aidyn! 👋</h3>
+                        <p class="text-xs text-slate-300 mt-0.5">3 active volunteer requests and 2 sports matches waiting today.</p>
+                    </div>
+                </div>
+
+                <!-- Quick Action Hub Cards -->
+                <div class="grid grid-cols-2 gap-3">
+                    <button onclick="switchTab('volunteering')" class="bg-white p-3.5 rounded-2xl shadow-sm border border-surface-border text-left hover:border-blue-500 transition group">
+                        <div class="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center mb-2 group-hover:scale-105 transition">
+                            <i data-lucide="hand-heart" class="w-5 h-5"></i>
+                        </div>
+                        <h4 class="text-xs font-bold text-slate-800">Volunteer</h4>
+                        <p class="text-[11px] text-slate-500 mt-0.5">Help Needed (+50 XP)</p>
+                    </button>
+
+                    <button onclick="switchTab('sport')" class="bg-white p-3.5 rounded-2xl shadow-sm border border-surface-border text-left hover:border-blue-500 transition group">
+                        <div class="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center mb-2 group-hover:scale-105 transition">
+                            <i data-lucide="trophy" class="w-5 h-5"></i>
+                        </div>
+                        <h4 class="text-xs font-bold text-slate-800">Sports</h4>
+                        <p class="text-[11px] text-slate-500 mt-0.5">Football Match Seeking Players</p>
+                    </button>
+
+                    <button onclick="switchTab('lostfound')" class="bg-white p-3.5 rounded-2xl shadow-sm border border-surface-border text-left hover:border-blue-500 transition group">
+                        <div class="w-9 h-9 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center mb-2 group-hover:scale-105 transition">
+                            <i data-lucide="search" class="w-5 h-5"></i>
+                        </div>
+                        <h4 class="text-xs font-bold text-slate-800">Lost & Found</h4>
+                        <p class="text-[11px] text-slate-500 mt-0.5">4 Items Found</p>
+                    </button>
+
+                    <button onclick="openModal('modal-lostfound')" class="bg-white p-3.5 rounded-2xl shadow-sm border border-surface-border text-left hover:border-blue-500 transition group">
+                        <div class="w-9 h-9 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center mb-2 group-hover:scale-105 transition">
+                            <i data-lucide="plus-circle" class="w-5 h-5"></i>
+                        </div>
+                        <h4 class="text-xs font-bold text-slate-800">Create Request</h4>
+                        <p class="text-[11px] text-slate-500 mt-0.5">Report Lost Item or Task</p>
+                    </button>
+                </div>
+
+                <!-- Recent Activity Feed -->
+                <div class="bg-white rounded-2xl p-4 shadow-sm border border-surface-border">
+                    <div class="flex items-center justify-between mb-3">
+                        <h3 class="text-xs font-bold text-slate-800 uppercase tracking-wider flex items-center gap-1.5">
+                            <i data-lucide="sparkles" class="w-4 h-4 text-blue-600"></i>
+                            Recent Announcements
+                        </h3>
+                        <span class="text-[11px] text-blue-600 font-semibold cursor-pointer" onclick="switchTab('volunteering')">View All</span>
+                    </div>
+
+                    <div class="space-y-3">
+                        <div class="flex items-start space-x-3 p-2.5 rounded-xl bg-surface-subtle border border-slate-100">
+                            <div class="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center flex-shrink-0 mt-0.5">
+                                <i data-lucide="building-2" class="w-4 h-4"></i>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <p class="text-xs font-semibold text-slate-800">Student Parliament Request</p>
+                                <p class="text-[11px] text-slate-600 line-clamp-1">Event organization: Hosts and decorators needed.</p>
+                                <span class="text-[10px] text-slate-400 mt-1 block">15 mins ago • +50 XP</span>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start space-x-3 p-2.5 rounded-xl bg-surface-subtle border border-slate-100">
+                            <div class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center flex-shrink-0 mt-0.5">
+                                <i data-lucide="dribbble" class="w-4 h-4"></i>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <p class="text-xs font-semibold text-slate-800">Grade 10B vs 10A Football Match</p>
+                                <p class="text-[11px] text-slate-600">Need 1 additional player for today's match.</p>
+                                <span class="text-[10px] text-slate-400 mt-1 block">1 hour ago • Football</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 2: LOST & FOUND -->
+            <section id="tab-lostfound" class="tab-content space-y-4 hidden">
+                <!-- Header Actions -->
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h2 class="text-base font-bold text-slate-900">Lost & Found</h2>
+                        <p class="text-xs text-slate-500">Lost something or found an item?</p>
+                    </div>
+                    <button onclick="openModal('modal-lostfound')" class="bg-navy-900 text-white text-xs font-semibold px-3 py-2 rounded-xl flex items-center gap-1.5 shadow-sm hover:bg-navy-800 transition">
+                        <i data-lucide="plus" class="w-4 h-4"></i>
+                        Report
+                    </button>
+                </div>
+
+                <!-- Filter Chips -->
+                <div class="flex space-x-2 overflow-x-auto no-scrollbar py-1">
+                    <button class="bg-navy-900 text-white text-xs px-3 py-1.5 rounded-xl font-medium whitespace-nowrap">All Items</button>
+                    <button class="bg-white text-slate-600 text-xs px-3 py-1.5 rounded-xl font-medium border border-surface-border whitespace-nowrap hover:bg-slate-50">Lost</button>
+                    <button class="bg-white text-slate-600 text-xs px-3 py-1.5 rounded-xl font-medium border border-surface-border whitespace-nowrap hover:bg-slate-50">Found</button>
+                </div>
+
+                <!-- Item Cards Grid -->
+                <div class="space-y-3" id="lost-found-container">
+                    <!-- Item 1 -->
+                    <div class="bg-white rounded-2xl p-3.5 border border-surface-border shadow-sm flex gap-3.5 items-center">
+                        <div class="w-20 h-20 bg-slate-100 rounded-xl flex-shrink-0 overflow-hidden relative">
+                            <img src="https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&q=80&w=200" alt="Textbook" class="w-full h-full object-cover">
+                            <span class="absolute top-1 left-1 bg-amber-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-md">Lost</span>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <h4 class="text-xs font-bold text-slate-800 truncate">Grade 10 Physics Textbook</h4>
+                            <p class="text-[11px] text-slate-500 mt-0.5 flex items-center gap-1">
+                                <i data-lucide="map-pin" class="w-3 h-3 text-slate-400"></i> Room 304 / 3rd Floor
+                            </p>
+                            <p class="text-[11px] text-slate-500 flex items-center gap-1 mt-0.5">
+                                <i data-lucide="clock" class="w-3 h-3 text-slate-400"></i> Yesterday, 14:30
+                            </p>
+                            <button onclick="handleClaimItem(this, 'Physics Textbook')" class="mt-2 w-full bg-slate-100 text-slate-700 hover:bg-blue-50 hover:text-blue-600 text-[11px] font-semibold py-1.5 rounded-lg border border-slate-200 transition text-center">
+                                This is Mine! Contact Owner
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Item 2 -->
+                    <div class="bg-white rounded-2xl p-3.5 border border-surface-border shadow-sm flex gap-3.5 items-center">
+                        <div class="w-20 h-20 bg-slate-100 rounded-xl flex-shrink-0 overflow-hidden relative">
+                            <img src="https://images.unsplash.com/photo-1584438784894-089d6a62b8fa?auto=format&fit=crop&q=80&w=200" alt="Keys" class="w-full h-full object-cover">
+                            <span class="absolute top-1 left-1 bg-emerald-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-md">Found</span>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <h4 class="text-xs font-bold text-slate-800 truncate">Keys with Blue Keychain</h4>
+                            <p class="text-[11px] text-slate-500 mt-0.5 flex items-center gap-1">
+                                <i data-lucide="map-pin" class="w-3 h-3 text-slate-400"></i> School Cafeteria
+                            </p>
+                            <p class="text-[11px] text-slate-500 flex items-center gap-1 mt-0.5">
+                                <i data-lucide="clock" class="w-3 h-3 text-slate-400"></i> Today, 10:15
+                            </p>
+                            <button onclick="handleClaimItem(this, 'Keys')" class="mt-2 w-full bg-slate-100 text-slate-700 hover:bg-emerald-50 hover:text-emerald-700 text-[11px] font-semibold py-1.5 rounded-lg border border-slate-200 transition text-center">
+                                Claim / Left at Reception
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Item 3 -->
+                    <div class="bg-white rounded-2xl p-3.5 border border-surface-border shadow-sm flex gap-3.5 items-center">
+                        <div class="w-20 h-20 bg-slate-100 rounded-xl flex-shrink-0 overflow-hidden relative">
+                            <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&q=80&w=200" alt="Headphones" class="w-full h-full object-cover">
+                            <span class="absolute top-1 left-1 bg-amber-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-md">Lost</span>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <h4 class="text-xs font-bold text-slate-800 truncate">White Wireless Earbuds</h4>
+                            <p class="text-[11px] text-slate-500 mt-0.5 flex items-center gap-1">
+                                <i data-lucide="map-pin" class="w-3 h-3 text-slate-400"></i> Main Sports Hall
+                            </p>
+                            <p class="text-[11px] text-slate-500 flex items-center gap-1 mt-0.5">
+                                <i data-lucide="clock" class="w-3 h-3 text-slate-400"></i> Yesterday
+                            </p>
+                            <button onclick="handleClaimItem(this, 'Wireless Earbuds')" class="mt-2 w-full bg-slate-100 text-slate-700 hover:bg-blue-50 hover:text-blue-600 text-[11px] font-semibold py-1.5 rounded-lg border border-slate-200 transition text-center">
+                                This is Mine! Contact Owner
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 3: VOLUNTEER -->
+            <section id="tab-volunteering" class="tab-content space-y-4 hidden">
+                <!-- User Volunteer Status & XP Card -->
+                <div class="bg-gradient-to-br from-navy-900 via-navy-800 to-navy-700 rounded-2xl p-4 text-white shadow-md relative">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <span class="text-[11px] text-blue-300 font-semibold uppercase tracking-wider">Earned Rewards</span>
+                            <div class="flex items-baseline space-x-2 mt-1">
+                                <span class="text-2xl font-extrabold text-white" id="user-points-val">150</span>
+                                <span class="text-xs text-blue-300 font-medium">XP Points</span>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <span class="text-xs text-slate-300 block">Volunteer Hours</span>
+                            <span class="text-lg font-bold text-emerald-400">18 Hours</span>
+                        </div>
+                    </div>
+
+                    <!-- Status Readiness Toggle -->
+                    <div class="mt-4 pt-3 border-t border-slate-700/80 flex items-center justify-between">
+                        <div class="flex items-center space-x-2">
+                            <div id="status-dot" class="w-2.5 h-2.5 rounded-full bg-emerald-400"></div>
+                            <span id="status-text" class="text-xs font-semibold text-slate-200">Available for Volunteering</span>
+                        </div>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" id="readiness-toggle" class="sr-only peer" checked onchange="toggleReadiness(this)">
+                            <div class="w-9 h-5 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-blue-600"></div>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Section Header -->
+                <div class="flex items-center justify-between">
+                    <h3 class="text-xs font-bold text-slate-800 uppercase tracking-wider">Help Requests</h3>
+                    <span class="text-xs text-slate-500">Parliament & Faculty</span>
+                </div>
+
+                <!-- Volunteer Request Cards -->
+                <div class="space-y-3">
+                    <!-- Request 1 -->
+                    <div class="bg-white rounded-2xl p-4 border border-surface-border shadow-sm">
+                        <div class="flex justify-between items-start">
+                            <span class="bg-blue-50 text-blue-700 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase">Student Parliament</span>
+                            <span class="text-emerald-600 font-bold text-xs bg-emerald-50 px-2 py-0.5 rounded-md">+50 XP</span>
+                        </div>
+                        <h4 class="text-xs font-bold text-slate-900 mt-2">School Event Setup & Technical Assistance</h4>
+                        <p class="text-[11px] text-slate-600 mt-1">Need 4 students to assist with assembly hall decoration and sound gear setup.</p>
+                        
+                        <div class="mt-3 flex items-center justify-between pt-2 border-t border-slate-100 text-[11px] text-slate-500">
+                            <span class="flex items-center gap-1"><i data-lucide="calendar" class="w-3.5 h-3.5"></i> Friday, 15:00</span>
+                            <span class="flex items-center gap-1"><i data-lucide="users" class="w-3.5 h-3.5"></i> 2/4 Slots Open</span>
+                        </div>
+
+                        <button onclick="applyForVolunteer(this, 50)" class="mt-3 w-full bg-navy-900 hover:bg-navy-800 text-white font-semibold text-xs py-2 rounded-xl transition flex items-center justify-center gap-1.5">
+                            <i data-lucide="hand-heart" class="w-4 h-4"></i>
+                            Accept & Help Out (+50 XP)
+                        </button>
+                    </div>
+
+                    <!-- Request 2 -->
+                    <div class="bg-white rounded-2xl p-4 border border-surface-border shadow-sm">
+                        <div class="flex justify-between items-start">
+                            <span class="bg-purple-50 text-purple-700 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase">Library Dept</span>
+                            <span class="text-emerald-600 font-bold text-xs bg-emerald-50 px-2 py-0.5 rounded-md">+20 XP</span>
+                        </div>
+                        <h4 class="text-xs font-bold text-slate-900 mt-2">New Textbook Cataloging</h4>
+                        <p class="text-[11px] text-slate-600 mt-1">Organizing newly arrived science textbooks into section shelves.</p>
+                        
+                        <div class="mt-3 flex items-center justify-between pt-2 border-t border-slate-100 text-[11px] text-slate-500">
+                            <span class="flex items-center gap-1"><i data-lucide="calendar" class="w-3.5 h-3.5"></i> Tomorrow, Recess</span>
+                            <span class="flex items-center gap-1"><i data-lucide="users" class="w-3.5 h-3.5"></i> 1/2 Slots Open</span>
+                        </div>
+
+                        <button onclick="applyForVolunteer(this, 20)" class="mt-3 w-full bg-navy-900 hover:bg-navy-800 text-white font-semibold text-xs py-2 rounded-xl transition flex items-center justify-center gap-1.5">
+                            <i data-lucide="hand-heart" class="w-4 h-4"></i>
+                            Accept & Help Out (+20 XP)
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 4: SPORTS -->
+            <section id="tab-sport" class="tab-content space-y-4 hidden">
+                <!-- Header -->
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h2 class="text-base font-bold text-slate-900">Sports Matchmaking</h2>
+                        <p class="text-xs text-slate-500">Find players or organize team matches</p>
+                    </div>
+                    <button onclick="openModal('modal-sport')" class="bg-emerald-600 text-white text-xs font-semibold px-3 py-2 rounded-xl flex items-center gap-1.5 shadow-sm hover:bg-emerald-700 transition">
+                        <i data-lucide="plus" class="w-4 h-4"></i>
+                        Host Match
+                    </button>
+                </div>
+
+                <!-- Match Requests -->
+                <div class="space-y-3" id="sports-container">
+                    <!-- Match 1 -->
+                    <div class="bg-white rounded-2xl p-4 border border-surface-border shadow-sm">
+                        <div class="flex justify-between items-center mb-2">
+                            <div class="flex items-center space-x-2">
+                                <span class="p-1.5 bg-emerald-100 text-emerald-700 rounded-lg">
+                                    <i data-lucide="dribbble" class="w-4 h-4"></i>
+                                </span>
+                                <div>
+                                    <h4 class="text-xs font-bold text-slate-800">Grade 10B vs Grade 10A</h4>
+                                    <p class="text-[10px] text-slate-500">Football • 5x5</p>
+                                </div>
+                            </div>
+                            <span class="bg-emerald-50 text-emerald-700 text-[10px] font-bold px-2 py-0.5 rounded-full border border-emerald-200">1 Player Needed</span>
+                        </div>
+
+                        <p class="text-[11px] text-slate-600 my-2">Need 1 player to complete our football roster after 6th period on the main field.</p>
+
+                        <div class="bg-surface-subtle p-2.5 rounded-xl flex items-center justify-between text-[11px] text-slate-600 mb-3">
+                            <span class="flex items-center gap-1"><i data-lucide="clock" class="w-3.5 h-3.5 text-slate-400"></i> Today, 15:30</span>
+                            <span class="flex items-center gap-1"><i data-lucide="map-pin" class="w-3.5 h-3.5 text-slate-400"></i> Outdoor Field</span>
+                        </div>
+
+                        <button onclick="joinSportMatch(this)" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs py-2 rounded-xl transition flex items-center justify-center gap-1.5">
+                            <i data-lucide="user-plus" class="w-4 h-4"></i>
+                            Join Match
+                        </button>
+                    </div>
+
+                    <!-- Match 2 -->
+                    <div class="bg-white rounded-2xl p-4 border border-surface-border shadow-sm">
+                        <div class="flex justify-between items-center mb-2">
+                            <div class="flex items-center space-x-2">
+                                <span class="p-1.5 bg-orange-100 text-orange-700 rounded-lg">
+                                    <i data-lucide="circle-dot" class="w-4 h-4"></i>
+                                </span>
+                                <div>
+                                    <h4 class="text-xs font-bold text-slate-800">Basketball • 3x3 Session</h4>
+                                    <p class="text-[10px] text-slate-500">Host: Nursultan (11A)</p>
+                                </div>
+                            </div>
+                            <span class="bg-amber-50 text-amber-700 text-[10px] font-bold px-2 py-0.5 rounded-full border border-amber-200">2 Players Needed</span>
+                        </div>
+
+                        <p class="text-[11px] text-slate-600 my-2">Friendly practice 3x3 session at indoor Gym B. All skill levels welcome!</p>
+
+                        <div class="bg-surface-subtle p-2.5 rounded-xl flex items-center justify-between text-[11px] text-slate-600 mb-3">
+                            <span class="flex items-center gap-1"><i data-lucide="clock" class="w-3.5 h-3.5 text-slate-400"></i> Today, 16:15</span>
+                            <span class="flex items-center gap-1"><i data-lucide="map-pin" class="w-3.5 h-3.5 text-slate-400"></i> Indoor Gym</span>
+                        </div>
+
+                        <button onclick="joinSportMatch(this)" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs py-2 rounded-xl transition flex items-center justify-center gap-1.5">
+                            <i data-lucide="user-plus" class="w-4 h-4"></i>
+                            Join Match
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        <!-- BOTTOM NAVIGATION BAR -->
+        <nav class="bg-white border-t border-surface-border py-2 px-3 absolute bottom-0 left-0 right-0 z-20 flex justify-around items-center rounded-b-none sm:rounded-b-[32px]">
+            <button onclick="switchTab('home')" id="nav-home" class="nav-btn flex flex-col items-center p-1.5 text-blue-600 font-semibold transition">
+                <i data-lucide="home" class="w-5 h-5"></i>
+                <span class="text-[10px] mt-1">Home</span>
+            </button>
+
+            <button onclick="switchTab('lostfound')" id="nav-lostfound" class="nav-btn flex flex-col items-center p-1.5 text-slate-400 hover:text-slate-600 transition">
+                <i data-lucide="search" class="w-5 h-5"></i>
+                <span class="text-[10px] mt-1">Lost & Found</span>
+            </button>
+
+            <button onclick="switchTab('volunteering')" id="nav-volunteering" class="nav-btn flex flex-col items-center p-1.5 text-slate-400 hover:text-slate-600 transition">
+                <i data-lucide="heart" class="w-5 h-5"></i>
+                <span class="text-[10px] mt-1">Volunteer</span>
+            </button>
+
+            <button onclick="switchTab('sport')" id="nav-sport" class="nav-btn flex flex-col items-center p-1.5 text-slate-400 hover:text-slate-600 transition">
+                <i data-lucide="trophy" class="w-5 h-5"></i>
+                <span class="text-[10px] mt-1">Sports</span>
+            </button>
+        </nav>
+
+        <!-- MODAL: ADD LOST/FOUND ITEM -->
+        <div id="modal-lostfound" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-end sm:items-center justify-center hidden">
+            <div class="bg-white w-full sm:max-w-sm rounded-t-3xl sm:rounded-2xl p-5 space-y-4 shadow-2xl transform transition-all">
+                <div class="flex justify-between items-center border-b pb-3">
+                    <h3 class="text-sm font-bold text-slate-900">Post Item (Lost & Found)</h3>
+                    <button onclick="closeModal('modal-lostfound')" class="text-slate-400 hover:text-slate-600 p-1">
+                        <i data-lucide="x" class="w-5 h-5"></i>
+                    </button>
+                </div>
+                
+                <form onsubmit="submitLostFound(event)" class="space-y-3">
+                    <div>
+                        <label class="block text-[11px] font-semibold text-slate-700 mb-1">Notice Type</label>
+                        <select id="lf-type" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2 text-xs focus:ring-2 focus:ring-blue-500 outline-none">
+                            <option value="Lost">I Lost Something</option>
+                            <option value="Found">I Found Something</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-[11px] font-semibold text-slate-700 mb-1">Item Title</label>
+                        <input id="lf-title" type="text" placeholder="e.g. Blue Jacket, Key Ring..." required class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2 text-xs focus:ring-2 focus:ring-blue-500 outline-none">
+                    </div>
+
+                    <div>
+                        <label class="block text-[11px] font-semibold text-slate-700 mb-1">Location (where lost/found)</label>
+                        <input id="lf-location" type="text" placeholder="e.g. Room 201, Cafeteria" required class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2 text-xs focus:ring-2 focus:ring-blue-500 outline-none">
+                    </div>
+
+                    <button type="submit" class="w-full bg-navy-900 text-white font-semibold text-xs py-2.5 rounded-xl hover:bg-navy-800 transition">
+                        Publish Notice
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- MODAL: CREATE SPORT MATCH -->
+        <div id="modal-sport" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-end sm:items-center justify-center hidden">
+            <div class="bg-white w-full sm:max-w-sm rounded-t-3xl sm:rounded-2xl p-5 space-y-4 shadow-2xl transform transition-all">
+                <div class="flex justify-between items-center border-b pb-3">
+                    <h3 class="text-sm font-bold text-slate-900">Host New Sport Match</h3>
+                    <button onclick="closeModal('modal-sport')" class="text-slate-400 hover:text-slate-600 p-1">
+                        <i data-lucide="x" class="w-5 h-5"></i>
+                    </button>
+                </div>
+                
+                <form onsubmit="submitSportMatch(event)" class="space-y-3">
+                    <div>
+                        <label class="block text-[11px] font-semibold text-slate-700 mb-1">Sport Category</label>
+                        <select id="sport-type" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2 text-xs focus:ring-2 focus:ring-blue-500 outline-none">
+                            <option value="Football">Football</option>
+                            <option value="Basketball">Basketball</option>
+                            <option value="Volleyball">Volleyball</option>
+                            <option value="Table Tennis">Table Tennis</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-[11px] font-semibold text-slate-700 mb-1">Players Needed</label>
+                        <input id="sport-count" type="number" min="1" max="10" placeholder="e.g. 1" required class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2 text-xs focus:ring-2 focus:ring-blue-500 outline-none">
+                    </div>
+
+                    <div>
+                        <label class="block text-[11px] font-semibold text-slate-700 mb-1">Time & Location</label>
+                        <input id="sport-time" type="text" placeholder="e.g. Today 16:00, Main Pitch" required class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2 text-xs focus:ring-2 focus:ring-blue-500 outline-none">
+                    </div>
+
+                    <button type="submit" class="w-full bg-emerald-600 text-white font-semibold text-xs py-2.5 rounded-xl hover:bg-emerald-700 transition">
+                        Post Match Announcement
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- CUSTOM TOAST NOTIFICATION -->
+        <div id="toast-notification" class="fixed bottom-16 left-1/2 -translate-x-1/2 bg-navy-900 text-white text-xs px-4 py-2.5 rounded-xl shadow-xl flex items-center space-x-2 transition-all opacity-0 pointer-events-none z-50 border border-slate-700">
+            <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-400"></i>
+            <span id="toast-message">Action completed!</span>
+        </div>
+
+    </div>
+
+    <!-- Application Script Logic -->
+    <script>
+        lucide.createIcons();
+
+        let userPoints = 150;
+
+        function switchTab(tabId) {
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => tab.classList.add('hidden'));
+
+            const navBtns = document.querySelectorAll('.nav-btn');
+            navBtns.forEach(btn => {
+                btn.classList.remove('text-blue-600');
+                btn.classList.add('text-slate-400');
+            });
+
+            const activeTab = document.getElementById(`tab-${tabId}`);
+            if(activeTab) {
+                activeTab.classList.remove('hidden');
+            }
+
+            const activeNav = document.getElementById(`nav-${tabId}`);
+            if(activeNav) {
+                activeNav.classList.remove('text-slate-400');
+                activeNav.classList.add('text-blue-600');
+            }
+        }
+
+        function toggleReadiness(checkbox) {
+            const statusDot = document.getElementById('status-dot');
+            const statusText = document.getElementById('status-text');
+
+            if (checkbox.checked) {
+                statusDot.className = 'w-2.5 h-2.5 rounded-full bg-emerald-400';
+                statusText.innerText = 'Available for Volunteering';
+                showToast('Status: Available for tasks');
+            } else {
+                statusDot.className = 'w-2.5 h-2.5 rounded-full bg-slate-500';
+                statusText.innerText = 'Currently Busy';
+                showToast('Status: Set to busy');
+            }
+        }
+
+        function applyForVolunteer(btn, points) {
+            if (btn.getAttribute('data-applied') === 'true') return;
+
+            btn.setAttribute('data-applied', 'true');
+            btn.classList.remove('bg-navy-900', 'hover:bg-navy-800');
+            btn.classList.add('bg-emerald-600', 'text-white');
+            btn.innerHTML = `<i data-lucide="check" class="w-4 h-4"></i> Joined Request!`;
+            lucide.createIcons();
+
+            userPoints += points;
+            document.getElementById('header-points-display').innerText = `${userPoints} XP`;
+            document.getElementById('user-points-val').innerText = userPoints;
+
+            showToast(`Registered successfully! Earned +${points} XP`);
+        }
+
+        function joinSportMatch(btn) {
+            if (btn.getAttribute('data-joined') === 'true') return;
+
+            btn.setAttribute('data-joined', 'true');
+            btn.classList.remove('bg-emerald-600', 'hover:bg-emerald-700');
+            btn.classList.add('bg-slate-700', 'text-slate-200');
+            btn.innerHTML = `<i data-lucide="check" class="w-4 h-4"></i> You are in the team!`;
+            lucide.createIcons();
+
+            showToast('Response sent to the match organizer!');
+        }
+
+        function handleClaimItem(btn, itemTitle) {
+            showToast(`Request sent regarding "${itemTitle}"`);
+            btn.innerText = 'Request Sent ✓';
+            btn.disabled = true;
+            btn.classList.add('opacity-60');
+        }
+
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.remove('hidden');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.add('hidden');
+        }
+
+        function submitLostFound(e) {
+            e.preventDefault();
+            const type = document.getElementById('lf-type').value;
+            const title = document.getElementById('lf-title').value;
+            const location = document.getElementById('lf-location').value;
+
+            const container = document.getElementById('lost-found-container');
+            const isLost = type === 'Lost';
+
+            const newItemHTML = `
+                <div class="bg-white rounded-2xl p-3.5 border border-surface-border shadow-sm flex gap-3.5 items-center">
+                    <div class="w-20 h-20 bg-slate-100 rounded-xl flex-shrink-0 overflow-hidden relative flex items-center justify-center text-slate-400">
+                        <i data-lucide="package" class="w-8 h-8"></i>
+                        <span class="absolute top-1 left-1 ${isLost ? 'bg-amber-500' : 'bg-emerald-500'} text-white text-[9px] font-bold px-1.5 py-0.5 rounded-md">${type}</span>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <h4 class="text-xs font-bold text-slate-800 truncate">${title}</h4>
+                        <p class="text-[11px] text-slate-500 mt-0.5 flex items-center gap-1">
+                            <i data-lucide="map-pin" class="w-3 h-3 text-slate-400"></i> ${location}
+                        </p>
+                        <p class="text-[11px] text-slate-500 flex items-center gap-1 mt-0.5">
+                            <i data-lucide="clock" class="w-3 h-3 text-slate-400"></i> Just now
+                        </p>
+                        <button onclick="handleClaimItem(this, '${title}')" class="mt-2 w-full bg-slate-100 text-slate-700 hover:bg-blue-50 hover:text-blue-600 text-[11px] font-semibold py-1.5 rounded-lg border border-slate-200 transition text-center">
+                            Contact Owner
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            container.insertAdjacentHTML('afterbegin', newItemHTML);
+            lucide.createIcons();
+            closeModal('modal-lostfound');
+            e.target.reset();
+            showToast('Notice published successfully!');
+        }
+
+        function submitSportMatch(e) {
+            e.preventDefault();
+            const sport = document.getElementById('sport-type').value;
+            const count = document.getElementById('sport-count').value;
+            const time = document.getElementById('sport-time').value;
+
+            const container = document.getElementById('sports-container');
+
+            const newSportHTML = `
+                <div class="bg-white rounded-2xl p-4 border border-surface-border shadow-sm">
+                    <div class="flex justify-between items-center mb-2">
+                        <div class="flex items-center space-x-2">
+                            <span class="p-1.5 bg-blue-100 text-blue-700 rounded-lg">
+                                <i data-lucide="trophy" class="w-4 h-4"></i>
+                            </span>
+                            <div>
+                                <h4 class="text-xs font-bold text-slate-800">${sport}</h4>
+                                <p class="text-[10px] text-slate-500">Host: Aidyn (You)</p>
+                            </div>
+                        </div>
+                        <span class="bg-emerald-50 text-emerald-700 text-[10px] font-bold px-2 py-0.5 rounded-full border border-emerald-200">${count} Player(s) Needed</span>
+                    </div>
+
+                    <div class="bg-surface-subtle p-2.5 rounded-xl flex items-center justify-between text-[11px] text-slate-600 mb-3 mt-2">
+                        <span class="flex items-center gap-1"><i data-lucide="clock" class="w-3.5 h-3.5 text-slate-400"></i> ${time}</span>
+                    </div>
+
+                    <button disabled class="w-full bg-slate-200 text-slate-600 font-semibold text-xs py-2 rounded-xl">
+                        Your Match Host is Active
+                    </button>
+                </div>
+            `;
+
+            container.insertAdjacentHTML('afterbegin', newSportHTML);
+            lucide.createIcons();
+            closeModal('modal-sport');
+            e.target.reset();
+            showToast('Match hosted successfully!');
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast-notification');
+            const toastMsg = document.getElementById('toast-message');
+
+            toastMsg.innerText = message;
+            toast.classList.remove('opacity-0', 'pointer-events-none');
+            toast.classList.add('opacity-100');
+
+            setTimeout(() => {
+                toast.classList.remove('opacity-100');
+                toast.classList.add('opacity-0', 'pointer-events-none');
+            }, 2500);
+        }
+    </script>
+</body>
+</html>
